@@ -18,11 +18,13 @@ with app.app_context():
     db.create_all()
 
 
+# function for read the files
 def read_file(file_path):
     with open(file_path, 'r') as file:
         return file.read()
 
 
+# class where we work with weather
 class WeatherService:
     def __init__(self, api_key, city):
         self.api_key = api_key
@@ -30,6 +32,7 @@ class WeatherService:
         logging.info("WeatherService initialized")
 
     def get_current_weather(self):
+        # shows the current weather
         try:
             url = f"http://api.openweathermap.org/data/2.5/weather?q={self.city}&appid={self.api_key}&units=metric"
             logging.info(f"Fetching current weather from URL: {url}")
@@ -40,6 +43,7 @@ class WeatherService:
             return None
 
     def get_noon_forecast(self):
+        # get noon forecast
         try:
             url = f"http://api.openweathermap.org/data/2.5/forecast?q={self.city}&appid={self.api_key}&units=metric"
             logging.info(f"Fetching noon forecast from URL: {url}")
@@ -57,9 +61,11 @@ class WeatherService:
             return []
 
 
+# class where we work with encryption and decryption
 class EncryptionManager:
     @staticmethod
     def generate_key():
+        # generate key for next using
         key = Fernet.generate_key()
         with open("secret.key", "wb") as key_file:
             key_file.write(key)
@@ -67,11 +73,13 @@ class EncryptionManager:
 
     @staticmethod
     def load_key():
+        # loading the key
         logging.info("Loading encryption key")
         return open("secret.key", "rb").read()
 
     @staticmethod
     def encrypt_message(message):
+        # encrypt messages
         key = EncryptionManager.load_key()
         f = Fernet(key)
         encrypted_message = f.encrypt(message.encode())
@@ -81,6 +89,7 @@ class EncryptionManager:
 
     @staticmethod
     def decrypt_message():
+        # decrypt messages
         try:
             key = EncryptionManager.load_key()
             f = Fernet(key)
@@ -94,11 +103,12 @@ class EncryptionManager:
             return None
 
 
+# function what shows us the page in website
 @app.route('/')
 def weather():
     logging.info("Weather route called")
     api_key = EncryptionManager.decrypt_message()
-    city = 'Berlin'
+    city = 'Almaty'
 
     weather_service = WeatherService(api_key, city)
 
@@ -129,6 +139,7 @@ def weather():
                            weather_history=weather_history, image_url=read_file("photoUrl.txt"))
 
 
+# when we start the program, starts this lines of code
 if __name__ == '__main__':
     logging.info(f"App is start")
     app.run(debug=True)
