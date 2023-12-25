@@ -1,0 +1,58 @@
+<!doctype html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport"
+          content="width=device-width, user-scalable=no, initial-scale=1.0, maximum-scale=1.0, minimum-scale=1.0">
+    <meta http-equiv="X-UA-Compatible" content="ie=edge">
+    <style>
+        body {
+          background-image: url({{ image_url }});
+          background-repeat: no-repeat;
+          background-attachment: fixed;
+          background-size: cover;
+        }
+    </style>
+    <link rel="stylesheet" type="text/css" href="{{ url_for('static', filename='css/bootstrap.css') }}">
+    <link rel="stylesheet" type="text/css" href="{{ url_for('static', filename='css/style.css') }}">
+    <title>Прогноз погоды в Алматы</title>
+</head>
+<body style="background-image: url('https://cdn.discordapp.com/attachments/779238390041935882/1187942106719846440/-1.jpg?ex=6598b84d&is=6586434d&hm=431b5854fab37b4ef421a6d1c5e1dd106a428098afd8bc7d77055799ac763b76&'); color:white">
+<div class="container" style="margin-top: 50px">
+    <h1>Прогноз погоды в Алматы</h1>
+    <h4 class="mt-5"><b>{{ current_weather }}</b></h4>
+    <h2 class="mt-4">Week weather:</h2>
+    <table class="table mt-4">
+        <tr>
+            <th>День недели</th>
+            <th>Температура</th>
+            <th>Описание</th>
+        </tr>
+        {% for item in weather_data %}
+        <tr>
+            <td>{{ item.day }}</td>
+            <td>{{ item.temp }}°C</td>
+            <td>{{ item.description }}</td>
+        </tr>
+        {% endfor %}
+    </table>
+        <h2 style="margin-top: 50px">История погоды:</h2>
+    <table class="table mt-4">
+        <tr>
+            <th>Время запроса</th>
+            <th>Город</th>
+            <th>Температура</th>
+            <th>Описание</th>
+        </tr>
+        {% for record in weather_history %}
+        <tr>
+            <td>{{ record.query_time }}</td>
+            <td>{{ record.city }}</td>
+            <td>{{ record.temperature }}°C</td>
+            <td>{{ record.description }}</td>
+        </tr>
+        {% endfor %}
+    </table>
+</div>
+</body>
+</html>
